@@ -23,10 +23,11 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
+                        .requestMatchers("/register").permitAll()
                         .anyRequest()
                         .authenticated())
                 .formLogin(formLogin -> formLogin
-                        .defaultSuccessUrl("/admin/home", true)
+                        .defaultSuccessUrl("/register", true)
                         .failureUrl("/login?error=true")
                         .permitAll()
                 )
@@ -35,7 +36,7 @@ public class SecurityConfiguration {
     }
 
     @Bean
-    public UserDetailsService userDetailsService() {
+    public InMemoryUserDetailsManager userDetailsService() {
         var userDetailsService = new InMemoryUserDetailsManager();
 
         var user = User.builder()
@@ -44,11 +45,10 @@ public class SecurityConfiguration {
                 .roles("USER")
                 .build();
         userDetailsService.createUser(user);
-
         var admin = User.builder()
                 .username("admin")
                 .password(passwordEncoder().encode("password"))
-                .roles("ADMIN")
+                .roles("ADMIN", "USER")
                 .build();
         userDetailsService.createUser(admin);
 
