@@ -2,6 +2,7 @@ package se.norrwing.itslek4demo.model;
 
 
 import jakarta.persistence.*;
+import org.jboss.aerogear.security.otp.api.Base32;
 
 import java.io.Serializable;
 
@@ -18,7 +19,15 @@ public class User implements Serializable {
     private String role;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
+
+    public User(String email, String password) {
+        this.email = email;
+        this.password = password;
+        this.secret = Base32.random();
+        this.role = "USER";
+    }
+
 
     public String getEmail() {
         return email;

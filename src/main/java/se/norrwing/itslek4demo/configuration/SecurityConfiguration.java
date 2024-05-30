@@ -27,11 +27,11 @@ public class SecurityConfiguration {
                         .anyRequest()
                         .authenticated())
                 .formLogin(formLogin -> formLogin
-                        .authenticationDetailsSource(authenticationDetailsSource)
+                        //.authenticationDetailsSource(authenticationDetailsSource)
                         .defaultSuccessUrl("/register", true)
                         .failureUrl("/login?error=true")
                         .permitAll()
-                )
+                );
 
            // Commented out for changes to formlogin with 2FA     .httpBasic(Customizer.withDefaults());
         return httpSecurity.build();
