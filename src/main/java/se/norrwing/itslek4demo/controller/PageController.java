@@ -1,5 +1,6 @@
 package se.norrwing.itslek4demo.controller;
 
+import com.google.zxing.qrcode.encoder.QRCode;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -11,16 +12,21 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RestController;
 import se.norrwing.itslek4demo.DTO.UserDTO;
+import se.norrwing.itslek4demo.repository.UserRepository;
 
 @Controller
 public class PageController {
 
     private PasswordEncoder passwordEncoder;
-    private InMemoryUserDetailsManager inMemoryUserDetailsManager;
+    private QRCode qrCode;
 
-    public PageController(PasswordEncoder passwordEncoder, InMemoryUserDetailsManager inMemoryUserDetailsManager) {
+    private UserRepository userRepository;
+
+    public MyController(PasswordEncoder passwordEncoder,
+                        QRCode qrCode, UserRepository userRepository){
         this.passwordEncoder = passwordEncoder;
-        this.inMemoryUserDetailsManager = inMemoryUserDetailsManager;
+        this.qrCode = qrCode;
+        this.userRepository = userRepository;
     }
 
 
@@ -50,6 +56,12 @@ public class PageController {
         inMemoryUserDetailsManager.createUser(toRegister);
         model.addAttribute("user", userDTO);
         return "result";
+    }
+
+    @GetMapping("/login")
+    public String loginScreen(){
+
+        return "login";
     }
 
 }
