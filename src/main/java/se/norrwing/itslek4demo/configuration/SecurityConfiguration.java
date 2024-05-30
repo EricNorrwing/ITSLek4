@@ -23,7 +23,7 @@ public class SecurityConfiguration {
                 .authorizeHttpRequests(authorizeRequests -> authorizeRequests
                         .requestMatchers("/user/**").hasRole("USER")
                         .requestMatchers("/admin/**").hasRole("ADMIN")
-                        .requestMatchers("/register").permitAll()
+                        .requestMatchers("/register/**").permitAll()
                         .anyRequest()
                         .authenticated())
                 .formLogin(formLogin -> formLogin
@@ -38,7 +38,6 @@ public class SecurityConfiguration {
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
         var userDetailsService = new InMemoryUserDetailsManager();
-
         var user = User.builder()
                 .username("user")
                 .password(passwordEncoder().encode("password"))
@@ -51,7 +50,6 @@ public class SecurityConfiguration {
                 .roles("ADMIN", "USER")
                 .build();
         userDetailsService.createUser(admin);
-
         return userDetailsService;
     }
 
