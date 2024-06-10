@@ -1,33 +1,48 @@
 package se.norrwing.itslek4demo.model;
 
-
 import jakarta.persistence.*;
-import org.jboss.aerogear.security.otp.api.Base32;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import java.io.Serializable;
 
 @Entity
-@Table(name="users")
+@Table(name = "users")
 public class User implements Serializable {
 
-    @Column(nullable = false,unique = true)
-    private String email;
-    @Column(nullable = false)
-    private String password;
-    @Column(nullable = false)
-    private String secret;
-    private String role;
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    public User(String email, String password) {
-        this.email = email;
-        this.password = password;
-        this.secret = Base32.random();
-        this.role = "USER";
+    @Column(nullable = false, unique = true)
+    private String email;
+
+    @Column(nullable = false)
+    private String password;
+
+    @Column(nullable = false)
+    private String secret;
+
+    private String role;
+
+    // Default constructor
+    public User() {
     }
 
+    // Parameterized constructor
+    public User(String email, String password, String secret) {
+        this.email = email;
+        this.password = password;
+        this.secret = secret;
+    }
+
+    // Getters and Setters
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
 
     public String getEmail() {
         return email;
@@ -60,12 +75,5 @@ public class User implements Serializable {
     public void setRole(String role) {
         this.role = role;
     }
-
-    public long getId() {
-        return id;
-    }
-
-    public void setId(long id) {
-        this.id = id;
-    }
 }
+

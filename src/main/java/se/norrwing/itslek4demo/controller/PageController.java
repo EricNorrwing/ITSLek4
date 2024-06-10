@@ -1,9 +1,11 @@
 package se.norrwing.itslek4demo.controller;
 
 
+import org.jboss.aerogear.security.otp.api.Base32;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -45,28 +47,32 @@ public class PageController {
         model.addAttribute("user", new UserDTO());
         return "registerPage";
     }
+    @GetMapping("/Success")
+    public String successPage () {
+        return "success";
+    }
 
-    @PostMapping("/register")
-    public String submitForm(@ModelAttribute("user") UserDTO userDTO, Model model) {
-        User user = new User(userDTO.getEmail(),passwordEncoder.encode(userDTO.getPassword()));
-        /*UserDetails toRegister = User.builder()
-                .password(passwordEncoder.encode(userDTO.getPassword()))
-                .username(userDTO.getEmail())
-                .roles("USER")
-                .build();
-        inMemoryUserDetailsManager.createUser(toRegister);
-         */
+    @PostMapping("/registerUser")
+    public String registerUser(@ModelAttribute("user") UserDTO userDTO,
+                               BindingResult result, Model model){
+
+        if(result.hasErrors()){
+            System.out.println("ERRORS");
+            return "registerPage";
+        }
+        User user = new User();
+        user.setEmail(userDTO.getEmail());
+        user.setPassword(passwordEncoder.encode(userDTO.getPassword()));
+        user.setRole("USER");
+        user.setSecret(Base32.random());
         userRepository.save(user);
-        model.addAttribute("qrcode"
-                , qrCode.dataUrl(user));
-        model.addAttribute("user", userDTO);
+        model.addAttribute("qrcode", qrCode.dataUrl(user));
         return "QRCodePage";
     }
 
 
     @GetMapping("/login")
     public String loginScreen(){
-
         return "login";
     }
 

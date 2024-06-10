@@ -31,7 +31,7 @@ public class MyUserDetailsService implements UserDetailsService {
         }
         Collection<? extends GrantedAuthority> authorities = getAuthorities(user.getRole());
 
-        return null;
+        return new org.springframework.security.core.userdetails.User(user.getEmail(), user.getPassword(), true, true, true, true, authorities);
     }
 
     private Collection<? extends GrantedAuthority> getAuthorities(String role) {
